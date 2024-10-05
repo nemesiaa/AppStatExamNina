@@ -146,6 +146,13 @@
                 <option value="spectral">Spectral</option>
               </select>
             </div>
+            <button
+              v-if="isEditing"
+              class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              @click.prevent="updateOneById(inputMonsters.id)"
+            >
+              Mettre à jour Monstre
+            </button>
 
             <button
               class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -247,6 +254,7 @@
             <div class="text-right">
               <button
                 class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-full"
+                @click.prevent="editOneById(monster.id)"
               >
                 Modifier
               </button>
@@ -324,6 +332,29 @@
               1
             );
           }, 600);
+        },
+        editOneById(id) {
+          this.isEditing = true;
+          this.inputMonsters = {
+            ...this.monsters.find((item) => item.id == id),
+          };
+        },
+        updateOneById(id) {
+          this.monsters.splice(
+            this.monsters.findIndex((item) => item.id == id),
+            1,
+            { ...this.inputMonsters }
+          );
+          this.inputMonsters = {
+            id: null,
+            img: "",
+            description: "",
+            name: "",
+            pv: "",
+            attaque: "",
+            type: "",
+          };
+          this.isEditing = false;
         },
       },
       watch: {
