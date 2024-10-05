@@ -265,26 +265,26 @@
   </body>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script>
-    localStorage.setItem(
-      "monsters",
-      JSON.stringify([
-        {
-          id: Date.now(),
-          img: "images/aqualizzard.png",
-          name: "aquadragon",
-          pv: "50",
-          attaque: "50",
-          type: "aquatique",
-        },
-      ])
-    );
+    // localStorage.setItem(
+    //   "monsters",
+    //   JSON.stringify([
+    //     {
+    //       id: Date.now(),
+    //       img: "images/aqualizzard.png",
+    //       name: "aquadragon",
+    //       pv: "50",
+    //       attaque: "50",
+    //       type: "aquatique",
+    //     },
+    //   ])
+    // );
 
     Vue.createApp({
       data() {
         return {
           monsters: JSON.parse(localStorage.getItem("monsters")) || [],
           inputMonsters: {
-            id: Date.now(),
+            id: null,
             img: "",
             name: "",
             pv: "",
