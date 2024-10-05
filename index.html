@@ -293,6 +293,12 @@
           },
         };
       },
+      watch: {
+        monsters(newValue, oldValue) {
+          localStorage.setItem("monsters", JSON.stringify(newValue));
+        },
+        deep: true,
+      },
     }).mount("#app");
   </script>
 </html>
