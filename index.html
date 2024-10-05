@@ -252,6 +252,7 @@
               </button>
               <button
                 class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-full"
+                @click.prevent="deleteOneById(monster.id)"
               >
                 Supprimer
               </button>
@@ -313,6 +314,16 @@
             attaque: "",
             type: "",
           };
+        },
+        deleteOneById(id) {
+          const monster = this.monsters.find((item) => item.id == id);
+          monster.isDeleted = true;
+          setTimeout(() => {
+            this.monsters.splice(
+              this.monsters.findIndex((item) => item.id == id),
+              1
+            );
+          }, 600);
         },
       },
       watch: {
