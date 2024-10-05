@@ -101,6 +101,7 @@
                 type="text"
                 class="w-full p-2 bg-gray-800 text-white rounded"
                 placeholder="Nom du monstre"
+                v-model="inputMonsters.name"
               />
             </div>
 
@@ -112,6 +113,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="PV"
+                  v-model="inputMonsters.pv"
                 />
               </div>
               <div>
@@ -120,6 +122,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Attaque"
+                  v-model="inputMonsters.attaque"
                 />
               </div>
             </div>
@@ -129,6 +132,7 @@
               <textarea
                 class="w-full p-2 bg-gray-800 text-white rounded"
                 placeholder="Description du monstre"
+                v-model="inputMonsters.description"
               ></textarea>
             </div>
 
@@ -145,6 +149,7 @@
 
             <button
               class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              @click.prevent="addOne()"
             >
               Ajouter Monstre
             </button>
@@ -234,7 +239,7 @@
               class="w-full h-40 object-cover rounded mb-4"
             />
             <h3 class="text-xl font-bold">{{monster.name}}</h3>
-            <p class="text-gray-300 text-sm mb-4">Monster Description</p>
+            <p class="text-gray-300 text-sm mb-4">{{monster.description}}</p>
             <div class="flex justify-between items-center mb-2">
               <span>PV: {{monster.pv}}</span>
               <span>Attaque: {{monster.attaque}}</span>
@@ -287,17 +292,36 @@
             id: null,
             img: "",
             name: "",
+            description: "",
             pv: "",
             attaque: "",
             type: "",
           },
         };
       },
-      watch: {
-        monsters(newValue, oldValue) {
-          localStorage.setItem("monsters", JSON.stringify(newValue));
+      methods: {
+        addOne() {
+          this.inputMonsters.id = Date.now();
+          this.inputMonsters.img = `images/${this.inputMonsters.name.toLowerCase()}.png`;
+          this.monsters.push({ ...this.inputMonsters });
+          this.inputMonsters = {
+            id: null,
+            img: "",
+            description: "",
+            name: "",
+            pv: "",
+            attaque: "",
+            type: "",
+          };
         },
-        deep: true,
+      },
+      watch: {
+        monsters: {
+          handler(newValue, oldValue) {
+            localStorage.setItem("monsters", JSON.stringify(newValue));
+          },
+          deep: true,
+        },
       },
     }).mount("#app");
   </script>
