@@ -11,7 +11,15 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
     <style>
+      .animate__backOutRight {
+        animation-duration: 1s;
+      }
       .monster-card[data-monster-type="cosmique"] {
         background: linear-gradient(to right, #6e48aa, #9d50bb);
       }
@@ -68,6 +76,10 @@
 
       .tab-content.active {
         display: block;
+      }
+      .animate__backOutRight {
+        animation-duration: 1s;
+        animation-fill-mode: both; /* Assure que l'animation est visible tout le long */
       }
     </style>
   </head>
@@ -204,6 +216,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Min PV"
+                  v-model="searchQuery.pvMin"
                 />
               </div>
               <div>
@@ -212,6 +225,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Max PV"
+                  v-model="searchQuery.pvMax"
                 />
               </div>
             </div>
@@ -223,6 +237,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Min Attaque"
+                  v-model="searchQuery.attaqueMin"
                 />
               </div>
               <div>
@@ -231,6 +246,7 @@
                   type="number"
                   class="w-full p-2 bg-gray-800 text-white rounded"
                   placeholder="Max Attaque"
+                  v-model="searchQuery.attaqueMax"
                 />
               </div>
             </div>
@@ -263,6 +279,7 @@
             :data-monster-type="monster.type"
             v-for="monster in sortedMonsters"
             :key="monster.id"
+            :class="{ animate__backOutRight : monster.isDeleted}"
           >
             <img
               :src="monster.img"
@@ -331,9 +348,14 @@
           },
           isFiltersTabActive: false,
           isEditing: false,
+          isDeleted: false,
           searchQuery: {
             name: "",
             type: "",
+            pvMin: null,
+            pvMax: null,
+            attaqueMin: null,
+            attaqueMax: null,
           },
         };
       },
@@ -343,11 +365,27 @@
             const nameMatch = monster.name
               .toLowerCase()
               .includes(this.searchQuery.name.toLowerCase());
+
             const typeMatch =
               this.searchQuery.type === "" ||
               monster.type === this.searchQuery.type;
 
-            return nameMatch && typeMatch;
+            // Conversion des valeurs PV et Attaque en nombres pour la comparaison
+            const pv = Number(monster.pv);
+            const attaque = Number(monster.attaque);
+
+            const pvMatch =
+              (this.searchQuery.pvMin === null ||
+                pv >= this.searchQuery.pvMin) &&
+              (this.searchQuery.pvMax === null || pv <= this.searchQuery.pvMax);
+
+            const attaqueMatch =
+              (this.searchQuery.attaqueMin === null ||
+                attaque >= this.searchQuery.attaqueMin) &&
+              (this.searchQuery.attaqueMax === null ||
+                attaque <= this.searchQuery.attaqueMax);
+
+            return nameMatch && typeMatch && pvMatch && attaqueMatch;
           });
         },
 
